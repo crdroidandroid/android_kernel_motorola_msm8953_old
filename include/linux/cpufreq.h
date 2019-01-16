@@ -548,6 +548,21 @@ extern struct cpufreq_governor cpufreq_gov_sched;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL)
 extern struct cpufreq_governor cpufreq_gov_schedutil;
 #define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_schedutil)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMANDX)
+extern struct cpufreq_governor cpufreq_gov_ondemandx;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_ondemandx)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ELEMENTALX)
+extern struct cpufreq_governor cpufreq_gov_elementalx;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_elementalx)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DARKNESSV5)
+extern struct cpufreq_governor cpufreq_gov_darknessv5;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_darknessv5)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ALUCARD)
+extern struct cpufreq_governor cpufreq_gov_alucard;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_alucard)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS)
+extern struct cpufreq_governor cpufreq_gov_smartmax_eps;
+#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_smartmax_eps)
 #endif
 
 static inline void cpufreq_policy_apply_limits(struct cpufreq_policy *policy)
@@ -722,6 +737,7 @@ unsigned long cpufreq_scale_min_freq_capacity(struct sched_domain *sd, int cpu);
 struct pid_namespace;
 void acct_update_power(struct task_struct *p, cputime_t cputime);
 void cpufreq_task_stats_init(struct task_struct *p);
+void cpufreq_task_stats_exit(struct task_struct *p);
 void cpufreq_task_stats_remove_uids(uid_t uid_start, uid_t uid_end);
 int  proc_time_in_state_show(struct seq_file *m, struct pid_namespace *ns,
 	struct pid *pid, struct task_struct *p);
