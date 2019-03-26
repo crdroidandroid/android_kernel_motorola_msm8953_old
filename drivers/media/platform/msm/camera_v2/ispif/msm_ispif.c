@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2017, 2019 The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013-2017, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -229,34 +229,32 @@ static long msm_ispif_cmd_ext(struct v4l2_subdev *sd,
 	long rc = 0;
 	struct ispif_device *ispif =
 		(struct ispif_device *)v4l2_get_subdevdata(sd);
-	struct ispif_cfg_data_ext pcdata = {0};
+	struct ispif_cfg_data_ext pcdata;
 	struct msm_ispif_param_data_ext *params = NULL;
-
-	if (is_compat_task()) {
 #ifdef CONFIG_COMPAT
-		struct ispif_cfg_data_ext_32 *pcdata32 =
-			(struct ispif_cfg_data_ext_32 *)arg;
+	struct ispif_cfg_data_ext_32 *pcdata32 =
+		(struct ispif_cfg_data_ext_32 *)arg;
 
-		if (pcdata32 == NULL) {
-			pr_err("Invalid params passed from user\n");
-			return -EINVAL;
-		}
-		pcdata.cfg_type  = pcdata32->cfg_type;
-		pcdata.size = pcdata32->size;
-		pcdata.data = compat_ptr(pcdata32->data);
-#endif
-	} else {
-		struct ispif_cfg_data_ext *pcdata64 =
+	if (pcdata32 == NULL) {
+		pr_err("Invalid params passed from user\n");
+		return -EINVAL;
+	}
+	pcdata.cfg_type  = pcdata32->cfg_type;
+	pcdata.size = pcdata32->size;
+	pcdata.data = compat_ptr(pcdata32->data);
+
+#else
+	struct ispif_cfg_data_ext *pcdata64 =
 		(struct ispif_cfg_data_ext *)arg;
 
-		if (pcdata64 == NULL) {
-			pr_err("Invalid params passed from user\n");
-			return -EINVAL;
-		}
-		pcdata.cfg_type  = pcdata64->cfg_type;
-		pcdata.size = pcdata64->size;
-		pcdata.data = pcdata64->data;
+	if (pcdata64 == NULL) {
+		pr_err("Invalid params passed from user\n");
+		return -EINVAL;
 	}
+	pcdata.cfg_type  = pcdata64->cfg_type;
+	pcdata.size = pcdata64->size;
+	pcdata.data = pcdata64->data;
+#endif
 	if (pcdata.size != sizeof(struct msm_ispif_param_data_ext)) {
 		pr_err("%s: payload size mismatch\n", __func__);
 		return -EINVAL;
@@ -651,7 +649,7 @@ static int msm_ispif_reset(struct ispif_device *ispif)
 }
 
 static void msm_ispif_sel_csid_core(struct ispif_device *ispif,
-	uint8_t intftype, uint8_t csid, enum msm_ispif_vfe_intf vfe_intf)
+	uint8_t intftype, uint8_t csid, uint8_t vfe_intf)
 {
 	uint32_t data;
 
@@ -691,8 +689,8 @@ static void msm_ispif_sel_csid_core(struct ispif_device *ispif,
 }
 
 static void msm_ispif_enable_crop(struct ispif_device *ispif,
-	uint8_t intftype, enum msm_ispif_vfe_intf vfe_intf,
-	uint16_t start_pixel, uint16_t end_pixel)
+	uint8_t intftype, uint8_t vfe_intf, uint16_t start_pixel,
+	uint16_t end_pixel)
 {
 	uint32_t data;
 	BUG_ON(!ispif);
@@ -723,8 +721,7 @@ static void msm_ispif_enable_crop(struct ispif_device *ispif,
 }
 
 static void msm_ispif_enable_intf_cids(struct ispif_device *ispif,
-	uint8_t intftype, uint16_t cid_mask, enum msm_ispif_vfe_intf vfe_intf,
-	uint8_t enable)
+	uint8_t intftype, uint16_t cid_mask, uint8_t vfe_intf, uint8_t enable)
 {
 	uint32_t intf_addr, data;
 
@@ -766,7 +763,7 @@ static void msm_ispif_enable_intf_cids(struct ispif_device *ispif,
 }
 
 static int msm_ispif_validate_intf_status(struct ispif_device *ispif,
-	uint8_t intftype, enum msm_ispif_vfe_intf vfe_intf)
+	uint8_t intftype, uint8_t vfe_intf)
 {
 	int rc = 0;
 	uint32_t data = 0;
@@ -806,7 +803,7 @@ static int msm_ispif_validate_intf_status(struct ispif_device *ispif,
 }
 
 static void msm_ispif_select_clk_mux(struct ispif_device *ispif,
-	uint8_t intftype, uint8_t csid, enum msm_ispif_vfe_intf vfe_intf)
+	uint8_t intftype, uint8_t csid, uint8_t vfe_intf)
 {
 	uint32_t data = 0;
 

@@ -31,8 +31,8 @@
 #include <media/msm_cam_sensor.h>
 #include <media/v4l2-subdev.h>
 #include <media/v4l2-ioctl.h>
-#include "msm_camera_i2c.h"
-#include "msm_camera_dt_util.h"
+#include "../io/msm_camera_i2c.h"
+#include "../io/msm_camera_dt_util.h"
 #include "msm_sd.h"
 
 #define DEFINE_MSM_MUTEX(mutexname) \
@@ -89,9 +89,7 @@ struct msm_sensor_ctrl_t {
 	uint32_t set_mclk_23880000;
 	uint8_t is_csid_tg_mode;
 	uint32_t is_secure;
-#ifdef CONFIG_MSMB_CAMERA_2017
 	uint8_t bypass_video_node_creation;
-#endif
 	uint32_t no_hw_strobe;
 };
 
